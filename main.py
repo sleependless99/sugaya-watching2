@@ -9,10 +9,10 @@ CONFIG = {
     "ITEM_IDS": ['ZHONA296297', 'ZHONA307715', 'ZHONA292019'],
 
     # 【必填】接收通知的邮箱地址
-    "TO_EMAIL": os.environ.get('TO_EMAIL', 'your_email@example.com'),
+    "TO_EMAIL": os.environ.get('TO_EMAIL', '2799313501@qq.com'),
 
     # 【必填】Resend API 密钥，我们会通过环境变量传入
-    "RESEND_API_KEY": os.environ.get('RESEND_API_KEY', 're_YOUR_API_KEY'),
+    "RESEND_API_KEY": os.environ.get('RESEND_API_KEY', 're_Y6jiGVfy_CrrjD6kZKoeDX4e81jAXoWow'),
 
     # 监控间隔时间（秒），建议120秒（2分钟）或以上
     "CHECK_INTERVAL_SECONDS": 120,
