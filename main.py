@@ -49,16 +49,32 @@ def try_curl_cffi_direct(item_id):
         return None
 
 # ==========================================
-# 方法 2：使用手动 Cookie（最可靠）
+# 方法 2：使用手动 Cookie（完整或单独）
 # ==========================================
 def try_with_manual_cookie(item_id):
-    cf_clearance = CONFIG.get("CF_CLEARANCE", "")
-    if not cf_clearance or len(cf_clearance) < 20:
+    raw_cookie = CONFIG.get("CF_CLEARANCE", "")
+    if not raw_cookie or len(raw_cookie) < 20:
         print("   ⚠️ [方法2] 未配置 CF_CLEARANCE")
         return None
+
     print("   🍪 [方法2] 使用手动 cookie...")
     session = curl_requests.Session(impersonate="chrome120")
-    session.cookies.set("cf_clearance", cf_clearance, domain="www.suruga-ya.jp")
+
+    # 解析 cookie 字符串（可能是一整串 key=value; key=value ...）
+    if '=' in raw_cookie and (';' in raw_cookie or 'cf_clearance' in raw_cookie):
+        # 当作完整 cookie 字符串处理
+        pairs = raw_cookie.split(';')
+        for pair in pairs:
+            pair = pair.strip()
+            if '=' in pair:
+                key, value = pair.split('=', 1)
+                session.cookies.set(key.strip(), value.strip(), domain="www.suruga-ya.jp")
+                print(f"   🍪 加载 cookie: {key.strip()} = {value.strip()[:30]}...")
+    else:
+        # 单个 cf_clearance 值
+        session.cookies.set("cf_clearance", raw_cookie, domain="www.suruga-ya.jp")
+        print(f"   🍪 加载单个 cf_clearance")
+
     api_url = "https://www.suruga-ya.jp/product/detail/offer_stock"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
