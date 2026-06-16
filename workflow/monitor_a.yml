@@ -1,0 +1,19 @@
+name: Monitor A (0,5,10...)
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 23-11 * * *'
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: pip install -r requirements.txt
+      - name: Run Monitor
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+        run: python main.py
